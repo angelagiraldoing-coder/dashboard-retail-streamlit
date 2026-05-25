@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import gdown
+import os
 
 st.markdown("""
 <style>
@@ -29,7 +31,20 @@ st.markdown("---")
 # Cargar datos
 @st.cache_data
 def load_data():
-    df = pd.read_csv("data/online_retail_cleaned.csv", sep=";")
+
+    GDRIVE_FILE_ID = "1cthwq3BX3rDRFfI7nnD1ekV871cyQYGt"
+    local_path = "data/online_retail_cleaned.csv"
+
+    # Descargar solo si no existe localmente
+    if not os.path.exists(local_path):
+        os.makedirs("data", exist_ok=True)
+        url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
+        gdown.download(url, local_path, quiet=False)
+
+    df = pd.read_csv(local_path, sep=";")
+
+    # Se cambia para utilizar los datos online
+    #df = pd.read_csv("data/online_retail_cleaned.csv", sep=";")
 
     # Convertir datos númericos
     df['TotalSales'] = pd.to_numeric(df['TotalSales'], errors='coerce')
@@ -41,7 +56,7 @@ def load_data():
 
     df = df.dropna(subset=['TotalSales', 'Quantity', 'InvoiceDate'])
 
-    # Incluí esto para troubleshooting
+    # Inclui esto para troubleshooting
     # print(df.info())
 
     return df
