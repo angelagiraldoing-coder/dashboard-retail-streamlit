@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.idea/
+*.iml
+data/online_retail_II.csv
+data/online_retail_cleaned.csv
+data/online_retail_cleaned.parquet/
